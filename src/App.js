@@ -1,7 +1,7 @@
 import {
+  Button,
   Card,
   CardContent,
- 
   Container,
   Grid,
   Typography,
@@ -34,7 +34,7 @@ function App() {
   const play = (index) => {
     setCells((previousCells) => {
       const temp = previousCells.map((cell, indx) => {
-        if (indx == index && cell == "_") {
+        if (indx === index && cell === "_") {
           setEven((prev) => !prev);
 
           return even ? "X" : "O";
@@ -48,33 +48,45 @@ function App() {
   };
   const chekWin = (cells) => {
     if (!cells.includes("_")) {
-      console.log("dfghjkl;");
       setEnd(true);
     }
 
-    Object.keys(wins).map(win=>{
-   wins[win].map(w=>{
-    
-
-    if(cells[w[0]]!="_" && cells[w[0]]==cells[w[1]] && cells[w[1]]==cells[w[2]] ){
-      
-      setWinner(cells[w[0]]);
-    }
-   
-    
-
+    Object.keys(wins).map((win) => {
+      wins[win].map((w) => {
+        if (
+          cells[w[0]] !== "_" &&
+          cells[w[0]] === cells[w[1]] &&
+          cells[w[1]] === cells[w[2]]
+        ) {
+          setWinner(cells[w[0]]);
+          setEnd(true);
+        }
+      });
     });
-    console.log("dfghj");
-    });
+  };
+  const restartGame = () => {
+    setCells(Array(9).fill("_"));
+    setEnd(false);
+    setWinner("");
   };
   return (
     <>
-      <Container my={5} ml={5} >
+      <Container my={5} ml={5}>
         <Typography variant="h3">Tic Tac Toe Game</Typography>
-        <Typography variant="h4" color="red"> {end && "Game end with Draw"} {winner && `${winner} is winner`}</Typography>
+        <Typography variant="h4" color="red">
+          {" "}
+          {end && "Game end "} {end && !winner && "with Draw"}{" "}
+          {winner && `${winner} is winner`}
+        </Typography>
+
         <Card my={5}>
           <CardContent>
-            <Grid container xs={4}  spacing={0}>
+            {end && (
+              <Button variant="outlined" color="success" onClick={restartGame}>
+                Restart
+              </Button>
+            )}
+            <Grid container xs={4} spacing={0}>
               {cells.map((cell, index) => {
                 return (
                   <Cell
@@ -82,7 +94,6 @@ function App() {
                     index={index}
                     cell={cell}
                     play={play}
-                   
                   ></Cell>
                 );
               })}
